@@ -1,0 +1,32 @@
+
+getting data in to r from excel
+```{r}
+#library(readxl)
+#data <- read_excel("FILE_PATH/NAME")
+```
+
+how to import a csv
+```{r}
+
+library(readr)
+iris <- read_csv("/Users/zacharydawson/Desktop/newbook-r/iris.csv")
+
+
+```
+head data or view the first few lines of data 
+```{r}
+head(iris)
+```
+sumarise data
+```{r}
+summary(iris)
+```
+#group the length and the width is seperate data sets both with the variaty still there and then merge back tougher 
+how to 
+```{r}
+
+```
+
+
+
+
