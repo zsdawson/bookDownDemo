@@ -1,6 +1,0 @@
-note
-about
-r-markdown
-data
-ploting-se
-grouped-vertical-bar-with-standard-error
