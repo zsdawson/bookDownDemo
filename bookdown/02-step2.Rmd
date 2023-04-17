@@ -1,0 +1,103 @@
+---
+title: "step2"
+output: html_document
+date: "2023-03-24"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+```{r}
+library(ggplot2)
+library(dplyr)
+```
+
+## data
+
+```{r data}
+data(mpg)
+means <- mpg %>% group_by(class) %>% summarise(mean = mean(hwy), se = sd(hwy)/sqrt(n()))
+means
+```
+
+## ploting se
+
+```{r}
+ggplot(means, aes(x = class, y = mean, fill = class)) +
+  geom_col(position = "dodge") +
+  geom_errorbar(aes(ymin = mean - se, ymax = mean + se), 
+                position = position_dodge(width = 0.9), 
+                width = 0.2)
+```
+
+################################################################################ 
+
+# grouped vertical bar with standard error
+
+```{r}
+data(diamonds)
+means <- diamonds %>%
+  group_by(cut, color) %>% 
+  summarise(mean = mean(price), se = sd(price)/sqrt(n()))
+means
+```
+
+```{r}
+ggplot(means, aes(x = cut, y = mean, fill = color)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  geom_errorbar(aes(ymin = mean - se, ymax = mean + se), 
+                position = position_dodge(width = 0.9), 
+                width = 0.2)
+```
+
+################################################################################ 
+
+```{r}
+data(ToothGrowth)
+means <- ToothGrowth %>% group_by(dose, supp) %>% 
+  summarise(mean = mean(len), se = sd(len)/sqrt(n()))
+means
+
+
+```
+
+#Line and Point Graph with Standard Error by Treatment
+
+```{r}
+ggplot(means, aes(x = dose, y = mean, color = supp, group = supp)) +
+  geom_line(size = 1) +
+  geom_point(size = 3, shape = 21, fill = "white") +
+  geom_errorbar(aes(ymin = mean - se, ymax = mean + se), 
+                width = 0.2, size = 1) +
+  labs(title = "Tooth Growth by Treatment", x = "Dose (mg/day)", y = "Tooth Length")
+
+```
+
+#dplyr to combine pseudoreplicates and then obtain n, mean and sem
+
+```{r}
+# Example data
+set.seed(123)
+data <- data.frame(
+  replicate = rep(1:3, each = 3),
+  value = rnorm(9, mean = 10, sd = 2),
+  pseudo = rep(1:3, 3)
+)
+```
+
+```{r}
+# Combine pseudoreplicates
+combined_data <- data %>%
+  group_by(replicate) %>%
+  summarise(n = n(),
+            mean = mean(value),
+            sd = sd(value),
+            sem = sd/sqrt(n)) %>%
+  ungroup()
+
+# View combined data
+combined_data
+```
